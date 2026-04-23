@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infineon Pending Approvals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ifx-teal: #0A8276;
+    --ifx-teal-dark: #076B61;
+    --ifx-teal-deep: #054A43;
+    --ifx-teal-bright: #14B8A6;
+    --ifx-ink: #0A0F1A;
+    --ifx-text: #1F2937;
+    --ifx-text-sub: #6B7280;
+    --ifx-border: #E5E7EB;
+    --ifx-card: #FFFFFF;
+    --ifx-alert: #DC2626;
+    --ifx-alert-soft: #FEE2E2;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: transparent;
+    font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ifx-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 720px;
+    background: var(--ifx-card);
+    border-radius: 18px;
+    border: 1px solid var(--ifx-border);
+    box-shadow: 0 12px 40px rgba(10, 15, 26, 0.06), 0 1px 4px rgba(10, 15, 26, 0.03);
+    overflow: hidden;
+    padding: 14px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--ifx-teal) 0%, var(--ifx-teal-dark) 65%, var(--ifx-teal-deep) 100%);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: "";
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+    position: relative;
+  }
+
+  .header-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 1.4px;
+    line-height: 1.1;
+  }
+
+  .header-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12.5px;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .count-badge {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 11px;
+    border-radius: 8px;
+  }
+
+  .view-all {
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.9;
+    transition: opacity 0.15s ease;
+  }
+  .view-all:hover { opacity: 1; }
+
+  /* CARDS */
+  .cards {
+    padding: 12px 0 4px;
+  }
+
+  .card {
+    background: var(--ifx-card);
+    border: 1px solid var(--ifx-border);
+    border-radius: var(--radius);
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 9px;
+    transition: all 0.2s ease;
+  }
+  .card:last-child { margin-bottom: 0; }
+
+  .card:hover {
+    border-color: #D1D5DB;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .avatar.orange { background: linear-gradient(135deg, #FB923C, #EA580C); }
+  .avatar.teal   { background: linear-gradient(135deg, var(--ifx-teal-bright), var(--ifx-teal)); }
+  .avatar.amber  { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+  .avatar.purple { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+  .avatar.slate  { background: linear-gradient(135deg, #64748B, #334155); }
+
+  .card-body { flex: 1; min-width: 0; }
+
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+
+  .card-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ifx-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #F1F3F5;
+    color: #495057;
+    border: 1px solid #E5E7EB;
+    white-space: nowrap;
+  }
+
+  .pill.required {
+    background: var(--ifx-alert-soft);
+    color: var(--ifx-alert);
+    border-color: #FCA5A5;
+  }
+
+  .card-desc {
+    font-size: 13.5px;
+    color: var(--ifx-text-sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #9CA3AF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .icon-btn:hover {
+    background: #F3F4F6;
+    color: var(--ifx-text);
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, var(--ifx-teal) 0%, var(--ifx-teal-dark) 100%);
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(10,130,118,0.25);
+    flex-shrink: 0;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(10,130,118,0.35);
+  }
+
+  .action-btn .tool {
+    color: rgba(255,255,255,0.88);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255,255,255,0.22);
+    letter-spacing: 0.1px;
+  }
+
+  .action-btn .verb {
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 13px;
+    letter-spacing: 0.1px;
+  }
+
+  /* STATUS */
+  .status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 4px 4px;
+    border-top: 1px solid var(--ifx-border);
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  .status-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ifx-text-sub);
+  }
+
+  .status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ifx-teal);
+    box-shadow: 0 0 0 3px rgba(10,130,118,0.22);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(10,130,118,0.22); }
+    50% { box-shadow: 0 0 0 6px rgba(10,130,118,0.05); }
+  }
+
+  .status-online { color: var(--ifx-teal); font-weight: 700; }
+
+  .status-link {
+    color: var(--ifx-ink);
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .status-link:hover { color: var(--ifx-teal); }
+
+  @media (max-width: 560px) {
+    .card-name { max-width: 110px; font-size: 14px; }
+    .card-desc { font-size: 12.5px; }
+    .action-btn .tool, .action-btn .verb { padding: 7px 9px; font-size: 12px; }
+    .card { padding: 11px; gap: 10px; }
+    .avatar { width: 38px; height: 38px; }
+    .header-subtitle { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="widget">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div>
+        <div class="header-title">PENDING APPROVALS</div>
+        <div class="header-subtitle">Action required from you</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="count-badge">5 Items</span>
+      <a href="#" class="view-all">
+        View All
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <!-- PTO -->
+    <div class="card">
+      <div class="avatar orange">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-title-row">
+          <span class="card-name">Klaus Weber</span>
+          <span class="pill">PTO</span>
+        </div>
+        <div class="card-desc">Mon, Nov 24 – Fri, Nov 28 · 5 days</div>
+      </div>
+      <button class="icon-btn" aria-label="Dismiss">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <button class="action-btn">
+        <span class="tool">SuccessFactors</span>
+        <span class="verb">Approve</span>
+      </button>
+    </div>
+
+    <!-- Expense -->
+    <div class="card">
+      <div class="avatar teal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 3 2V2l-3 2-3-2-3 2-3-2-3 2-3-2z"/>
+          <line x1="8" y1="10" x2="16" y2="10"/>
+          <line x1="8" y1="14" x2="13" y2="14"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-title-row">
+          <span class="card-name">Maria Schmidt</span>
+          <span class="pill">Expense</span>
+        </div>
+        <div class="card-desc">Dresden Fab Visit · €1,240.50</div>
+      </div>
+      <button class="icon-btn" aria-label="Inspect">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill=&...
